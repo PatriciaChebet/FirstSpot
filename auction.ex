@@ -15,7 +15,7 @@ defmodule Auction do
         @repo.get!(Item, id)
     end
 
-    def get_item(attrs) do
+    def get_item_by(attrs) do
         @repo.get_by(Item, attrs)
     end
 end
@@ -46,5 +46,12 @@ defmodule Auction.FakeRepo do
     def all(Item), do: @items
     def get!(Item, id) do
         Enum.find(@items, fn(item) -> item.id == id end)
+    end
+    def get_by(Item, attrs) do
+        Enum.find(@items, fn(item) ->
+           Enum.all?(Map.keys(attrs), fn(key) ->
+              Map.get(item, key) === attrs[key]
+           end)
+        end)
     end
 end
